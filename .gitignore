@@ -1,0 +1,6 @@
+build/**
+makefile
+build.sh
+server
+exercise/**
+*ServerLog
