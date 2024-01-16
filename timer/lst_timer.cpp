@@ -1,6 +1,34 @@
 #include "lst_timer.h"
 #include "../http/http_conn.h"
 
+
+template<class T>
+struct X
+{
+    X(T) {}
+ 
+    template<class Iter>
+    X(Iter b, Iter e) {}
+ 
+    template<class Iter>
+    auto foo(Iter b, Iter e)
+    {
+        return X(b, e); // no deduction: X is the current X<T>
+    }
+ 
+    template<class Iter>
+    auto bar(Iter b, Iter e)
+    {
+        return X<typename Iter::value_type>(b, e); // must specify what we want
+    }
+ 
+    auto baz()
+    {
+        return ::X(0); // not the injected-class-name; deduced to be X<int>
+    }
+};
+X x("t");
+auto w = x.foo(1,3);
 sort_timer_lst::sort_timer_lst()
 {
     head = NULL;

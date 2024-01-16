@@ -34,9 +34,9 @@ public:
     static const int WRITE_BUFFER_SIZE = 1024;
     enum METHOD
     {
-        GET = 0,
-        POST,
-        HEAD,
+        GET = 0, 
+        POST, //向服务器提交数据
+        HEAD, //请求http返回头数据
         PUT,
         DELETE,
         TRACE,
@@ -46,13 +46,13 @@ public:
     };
     enum CHECK_STATE
     {
-        CHECK_STATE_REQUESTLINE = 0,
-        CHECK_STATE_HEADER,
-        CHECK_STATE_CONTENT
+        CHECK_STATE_REQUESTLINE = 0, //请求行
+        CHECK_STATE_HEADER, //请求头
+        CHECK_STATE_CONTENT //请求数据
     };
-    enum HTTP_CODE
+    enum HTTP_CODE //上层处理http协议的状态机
     {
-        NO_REQUEST,
+        NO_REQUEST, //
         GET_REQUEST,
         BAD_REQUEST,
         NO_RESOURCE,

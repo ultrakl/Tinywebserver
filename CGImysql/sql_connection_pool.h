@@ -9,7 +9,6 @@
 #include <iostream>
 #include <string>
 #include "../lock/locker.h"
-#include "../log/log.h"
 
 using namespace std;
 
@@ -46,6 +45,7 @@ public:
 	int m_close_log;	//日志开关
 };
 
+//每个实例都保证一个连接能够得到正确释放进连接池中
 class connectionRAII{
 
 public:

@@ -6,6 +6,7 @@
 #include <list>
 #include <pthread.h>
 #include <iostream>
+#include "../log/log.h"
 #include "sql_connection_pool.h"
 
 using namespace std;
@@ -39,14 +40,14 @@ void connection_pool::init(string url, string User, string PassWord, string DBNa
 
 		if (con == NULL)
 		{
-			LOG_ERROR("MySQL Error");
+			LOG_ERROR("%s", mysql_error(con));
 			exit(1);
 		}
 		con = mysql_real_connect(con, url.c_str(), User.c_str(), PassWord.c_str(), DBName.c_str(), Port, NULL, CLIENT_MULTI_STATEMENTS);
 
 		if (con == NULL)
 		{
-			LOG_ERROR("MySQL Error");
+			LOG_ERROR("%s", mysql_error(con));
 			exit(1);
 		}
 		connList.push_back(con);

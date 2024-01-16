@@ -33,7 +33,10 @@ struct client_data
     util_timer *timer;
 };
 
-class util_timer
+/**
+ * @brief Represents a timer node in a linked list.
+ */
+class util_timer 
 {
 public:
     util_timer() : prev(NULL), next(NULL) {}
@@ -41,13 +44,13 @@ public:
 public:
     time_t expire;
     
-    void (* cb_func)(client_data *);
+    void (* cb_func)(client_data *); //回调函数，alaram倒计时结束后被触发
     client_data *user_data;
     util_timer *prev;
     util_timer *next;
 };
 
-class sort_timer_lst
+class sort_timer_lst //管理链表
 {
 public:
     sort_timer_lst();
