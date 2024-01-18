@@ -186,7 +186,8 @@ else()
 		NAMES "mysql.h"
 		PATHS "/usr/include/mysql"
 			  "/usr/local/include/mysql"
-			  "/usr/mysql/include/mysql" )
+			  "/usr/mysql/include/mysql"
+			  "/usr/local/mysql/include")
 	
 	find_library( MYSQL_LIBRARY
 		NAMES "mysqlclient" "mysqlclient_r"
@@ -197,7 +198,8 @@ else()
 			  "/usr/local/lib/mysql"
 			  "/usr/local/lib64/mysql"
 			  "/usr/mysql/lib/mysql"
-			  "/usr/mysql/lib64/mysql" )
+			  "/usr/mysql/lib64/mysql" 
+			  "/usr/local/mysql/lib")
 endif()
 
 
@@ -213,7 +215,7 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set MYSQL_FOUND to TRUE if
 # all listed variables are TRUE
 include( FindPackageHandleStandardArgs )
-find_package_handle_standard_args( MYSQL DEFAULT_MSG
+find_package_handle_standard_args( MYSQL 
 	REQUIRED_VARS	MYSQL_LIBRARY MYSQL_INCLUDE_DIR
 	VERSION_VAR		MYSQL_VERSION_STRING )
 
