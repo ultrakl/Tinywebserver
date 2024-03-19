@@ -22,9 +22,6 @@ public:
     //触发组合模式
     int TRIGMode;
 
-    //listenfd触发模式
-    int LISTENTrigmode;
-
     //connfd触发模式
     int CONNTrigmode;
 

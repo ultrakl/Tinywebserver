@@ -73,7 +73,7 @@ void addfd(int epollfd, int fd, bool one_shot, int TRIGMode)
     setnonblocking(fd);
 }
 
-//从内核时间表删除描述符
+//从内核事件表删除描述符
 void removefd(int epollfd, int fd)
 {
     epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, 0);
@@ -389,7 +389,7 @@ http_conn::HTTP_CODE http_conn::do_request()
 {
     strcpy(m_real_file, doc_root);
     int len = strlen(doc_root);
-    //printf("m_url:%s\n", m_url);
+    printf("m_url:%s\n", m_url);
     const char *p = strrchr(m_url, '/');
 
     //处理cgi
@@ -398,15 +398,8 @@ http_conn::HTTP_CODE http_conn::do_request()
 
         //根据标志判断是登录检测还是注册检测
         char flag = m_url[1];
-
-        char *m_url_real = (char *)malloc(sizeof(char) * 200);
-        strcpy(m_url_real, "/");
-        strcat(m_url_real, m_url + 2);
-        strncpy(m_real_file + len, m_url_real, FILENAME_LEN - len - 1);
-        free(m_url_real);
-
         //将用户名和密码提取出来
-        //user=123&passwd=123
+        //user=123&password=123
         char name[100], password[100];
         int i;
         for (i = 5; m_string[i] != '&'; ++i)
@@ -507,9 +500,10 @@ http_conn::HTTP_CODE http_conn::do_request()
 
     if (S_ISDIR(m_file_stat.st_mode))
         return BAD_REQUEST;
-
+    
     int fd = open(m_real_file, O_RDONLY);
     m_file_address = (char *)mmap(0, m_file_stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    //避免文件描述符资源的浪费和占用
     close(fd);
     return FILE_REQUEST;
 }
@@ -584,8 +578,8 @@ bool http_conn::add_response(const char *format, ...)
         return false;
     va_list arg_list;
     va_start(arg_list, format);
-    int len = vsnprintf(m_write_buf + m_write_idx, WRITE_BUFFER_SIZE - 1 - m_write_idx, format, arg_list);
-    if (len >= (WRITE_BUFFER_SIZE - 1 - m_write_idx))
+    int len = vsnprintf(m_write_buf + m_write_idx, WRITE_BUFFER_SIZE - m_write_idx, format, arg_list);
+    if (len >= (WRITE_BUFFER_SIZE - m_write_idx))
     {
         va_end(arg_list);
         return false;

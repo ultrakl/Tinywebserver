@@ -185,7 +185,8 @@ public:
     return true;
   }
 
-  // 增加了超时处理
+  // 增加了超时处理, 此时item不一定非要被赋值，也就是说若出现虚假唤醒，直接返回即可
+  // 当然这里的超时处理我也不满意，若虚假唤醒后时间仍然很充裕呢
   bool pop(T &item, int ms_timeout) {
     struct timespec t = {0, 0};
     struct timeval now = {0, 0};
@@ -205,7 +206,6 @@ public:
         return false;
       }
     }
-    return m_size;
     if (m_size <= 0) {
       m_mutex.unlock();
       return false;

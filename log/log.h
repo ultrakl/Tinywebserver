@@ -19,8 +19,10 @@ public:
     /* static Log* get_instance() {
         Log* tmp = instance.load(memory_order_relaxed);
         atomic_thread_fence(memory_order_acquire);
+        // 和release配对，保证instance的写操作对其他线程可见，若没有该屏障，则不能保证即使该单例指针已经可见，
+        // 单例的构造函数也已经执行完毕,即保证下面一句和new语句的同步
         if(tmp == NULL) {
-            lock_guard<mutex> lock(glomutex);
+            lock_guard<mutex> lock(glomutex); 
             tmp = instance.load(memory_order_relaxed);
             if(tmp == NULL) {
                 tmp = new Log;
@@ -43,7 +45,7 @@ public:
         return nullptr;
     }
     //可选择的参数有日志文件、日志缓冲区大小、最大行数以及最长日志条队列
-    bool init(const char *file_name, int close_log, int log_buf_size = 8192, int split_lines = 5000000, int max_queue_size = 0);
+    bool init(const char *file_name, int log_buf_size = 8192, int split_lines = 5000000, int max_queue_size = 0);
 
     void write_log(int level, const char *format, ...);
 
@@ -77,7 +79,6 @@ private:
     block_queue<string> *m_log_queue; //阻塞队列
     bool m_is_async;                  //是否同步标志位
     locker m_mutex;
-    int m_close_log; //关闭日志
     // static atomic<Log*> instance;
     // static mutex glomutex;
 };

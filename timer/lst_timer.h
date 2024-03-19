@@ -26,11 +26,14 @@
 
 class util_timer;
 
+/**
+ * @brief Represents client data structure. This structure holds information about the client, such as the client's address, socket file descriptor, and a pointer to the associated timer.
+ */
 struct client_data
 {
-    sockaddr_in address;
-    int sockfd;
-    util_timer *timer;
+    sockaddr_in address;    ///< The client's address
+    int sockfd;             ///< The client's socket file descriptor
+    util_timer *timer;      ///< Pointer to the associated timer
 };
 
 /**
@@ -42,13 +45,13 @@ public:
     util_timer() : prev(NULL), next(NULL) {}
 
 public:
-    time_t expire;
-    
-    void (* cb_func)(client_data *); //回调函数，alaram倒计时结束后被触发
-    client_data *user_data;
-    util_timer *prev;
-    util_timer *next;
+    time_t expire;              ///< The expiration time of the timer (absolute time)
+    void (* cb_func)(client_data *);    ///< Callback function to be triggered when the timer expires
+    client_data *user_data;     ///< Pointer to the client data associated with the timer
+    util_timer *prev;           ///< Pointer to the previous timer node
+    util_timer *next;           ///< Pointer to the next timer node
 };
+
 
 class sort_timer_lst //管理链表
 {
@@ -64,8 +67,8 @@ public:
 private:
     void add_timer(util_timer *timer, util_timer *lst_head);
 
-    util_timer *head;
-    util_timer *tail;
+    util_timer *head;   ///< Pointer to the head of the timer linked list
+    util_timer *tail;   ///< Pointer to the tail of the timer linked list
 };
 
 class Utils

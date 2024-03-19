@@ -78,9 +78,9 @@ void WebServer::log_write()
     {
         //初始化日志
         if (1 == m_log_write)
-            Log::get_instance()->init("./ServerLog", m_close_log, 2000, 800000, 800);
+            Log::get_instance()->init("./ServerLog", 2000, 800000, 800);
         else
-            Log::get_instance()->init("./ServerLog", m_close_log, 2000, 800000, 0);
+            Log::get_instance()->init("./ServerLog", 2000, 800000, 0);
     }
 }
 
@@ -124,7 +124,7 @@ void WebServer::eventListen()
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(m_port);
-
+    
     int flag = 1;
     setsockopt(m_listenfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
     ret = bind(m_listenfd, (struct sockaddr *)&address, sizeof(address));
@@ -197,7 +197,7 @@ void WebServer::deal_timer(util_timer *timer, int sockfd)
     LOG_INFO("close fd %d", users_timer[sockfd].sockfd);
 }
 
-bool WebServer::dealclinetdata()
+bool WebServer::dealclientdata()
 {
     struct sockaddr_in client_address;
     socklen_t client_addrlength = sizeof(client_address);
@@ -395,7 +395,7 @@ void WebServer::eventLoop()
             //处理新到的客户连接
             if (sockfd == m_listenfd)
             {
-                bool flag = dealclinetdata();
+                bool flag = dealclientdata();
                 if (false == flag)
                     continue;
             }

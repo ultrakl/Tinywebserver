@@ -44,7 +44,7 @@ public:
         CONNECT,
         PATH
     };
-    enum CHECK_STATE
+    enum CHECK_STATE //解析客户请求时，主状态机所处状态
     {
         CHECK_STATE_REQUESTLINE = 0, //请求行
         CHECK_STATE_HEADER, //请求头
@@ -61,7 +61,7 @@ public:
         INTERNAL_ERROR,
         CLOSED_CONNECTION
     };
-    enum LINE_STATUS
+    enum LINE_STATUS //行的处理状态
     {
         LINE_OK = 0,
         LINE_BAD,
@@ -89,17 +89,18 @@ public:
 
 private:
     void init();
-    HTTP_CODE process_read();
-    bool process_write(HTTP_CODE ret);
-    HTTP_CODE parse_request_line(char *text);
-    HTTP_CODE parse_headers(char *text);
-    HTTP_CODE parse_content(char *text);
-    HTTP_CODE do_request();
+    HTTP_CODE process_read(); //解析http请求
+    bool process_write(HTTP_CODE ret); //向m_write_buf中填充http应答
+    HTTP_CODE parse_request_line(char *text); //解析请求行
+    HTTP_CODE parse_headers(char *text); //解析请求头
+    HTTP_CODE parse_content(char *text); //解析请求数据
+    HTTP_CODE do_request(); //处理请求, 从m_real_file中获取文件内容, 根据请求报文产生响应报文
     char *get_line() { return m_read_buf + m_start_line; };
     LINE_STATUS parse_line();
     void unmap();
+    //以下函数均被do_request调用
     bool add_response(const char *format, ...);
-    bool add_content(const char *content);
+    bool add_content(const char *content); 
     bool add_status_line(int status, const char *title);
     bool add_headers(int content_length);
     bool add_content_type();
